@@ -133,7 +133,7 @@ results_df["delta"] = results_df.apply(
 )
 reduced_df = results_df[~results_df["version"].isin(["original", "python"])]
 
-colors = {"c": "#DD8452", "cuda": "#55A868"}
+colors = {"c": "#DD8452", "cuda": "#4C72B0"}
 
 fig, axes = plt.subplots(1, 2, figsize=(16, 6))
 
@@ -154,7 +154,7 @@ axes[0].tick_params(axis="x", rotation=30)
 
 # ── Line chart: accuracy per version ─────────────────────────────────────────
 version_order = ["original", "c", "cuda"]
-palette = {"yeast": "#4C72B0", "optdigits": "#DD8452", "vh_data15": "#55A868"}
+palette = {"yeast": "#C94040", "optdigits": "#55A868", "vh_data15": "#7A5C99"}
 offsets = {"optdigits": 8, "vh_data15": -14, "yeast": 8}
 
 for ds_name, group in results_df.groupby("dataset"):
