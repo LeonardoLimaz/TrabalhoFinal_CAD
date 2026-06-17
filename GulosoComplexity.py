@@ -1,163 +1,156 @@
-from itertools import count  # O(1)
-from sqlite3 import Time  # O(1)
-import pandas as pd  # O(1)
-import numpy as np  # O(1)
-from sklearn.metrics.pairwise import euclidean_distances  # O(num_instances^2 * num_attributes)
-from sklearn.neighbors import KNeighborsClassifier  # O(1)
-from sklearn.metrics import accuracy_score  # O(1)
-from numba import jit, cuda  # O(1)
-from typing import *  # O(1)
-import random  # O(1)
-import math  # O(1)
-import time  # O(1)
-#Ordem de complexidade da abordagem gulosa O(num ants x num instances2 *iterations)
+import time
 
-# Função para calcular a distância entre todas as instâncias
-# Complexidade: O(num_instances^2 * num_attributes)
+import numpy as np
+from sklearn.metrics.pairwise import euclidean_distances
+
+# Ordem de complexidade da abordagem gulosa O(num_ants x num_instances^2 * iterations)
+# Versao vetorizada com numpy: a mesma logica da versao original (formiga escolhe na
+# ordem de feromonio, sorteio binario por candidato, deposito recalculado sobre o
+# caminho inteiro a cada rodada, evaporacao global), mas sem laços Python aninhados
+# O(n^2), para ficar comparavel em escala com as versoes C/CUDA.
+
+
 def get_pairwise_distance(matrix: np.ndarray) -> np.ndarray:
-    return euclidean_distances(matrix)  # O(n_instances^2 * num_attributes)
+    return euclidean_distances(matrix)
 
-# Função para calcular as taxas de visibilidade com base nas distâncias
-# Complexidade: O(num_instances^2)
-def get_visibility_rates_by_distances(distances: np.ndarray) -> np.ndarray:
-    visibilities = np.zeros(distances.shape)  # O(n_instances^2)
-    for i in range(distances.shape[0]):
-        for j in range(distances.shape[1]):
-            if i != j:
-                if distances[i, j] == 0:
-                    visibilities[i, j] = 0
-                else:
-                    visibilities[i, j] = 1 / distances[i, j]
-    return visibilities
 
-# Função para criar a matriz de formigas
-# Complexidade: O(1)
-def create_colony(num_ants):
-    return np.full((num_ants, num_ants), -1)  # O(1)
+def create_colony(num_ants: int) -> np.ndarray:
+    colony = np.full((num_ants, num_ants), -1, dtype=np.int8)
+    np.fill_diagonal(colony, 1)
+    return colony
 
-# Função para criar trilhas de feromônio
-# Complexidade: O(num_instances^2 * num_attributes)
-def create_pheromone_trails(search_space: np.ndarray, initial_pheromone: float) -> np.ndarray:
-    trails = np.full(search_space.shape, initial_pheromone, dtype=np.float64)  # O(n_instances^2 * num_attributes)
-    np.fill_diagonal(trails, 0)  # O(n_instances)
+
+def create_pheromone_trails(n: int, initial_pheromone: float) -> np.ndarray:
+    trails = np.full((n, n), initial_pheromone, dtype=np.float64)
+    np.fill_diagonal(trails, 0.0)
     return trails
 
-# Função para calcular o depósito de feromônio com base nas escolhas das formigas
-# Complexidade: O(num_ants * num_instances^2 * num_attributes)
-def get_pheromone_deposit(ant_choices: List[Tuple[int, int]], distances: np.ndarray, deposit_factor: float) -> float:
-    tour_length = 0
-    for path in ant_choices:
-        tour_length += distances[path[0], path[1]]  # O(num_ants * n_instances^2 * num_attributes)
 
-    if tour_length == 0:
-        return 0  # O(1)
+def choose_paths_greedy_round(colony, pheromone, distances, last_pos, undefined_count,
+                               path_from, path_to, path_lengths, tour_length, rng):
+    """Processa uma rodada do ACO guloso para todas as formigas ainda ativas.
 
-    if math.isinf(tour_length):
-        print('deu muito ruim!')  # O(1)
+    Cada formiga tenta os candidatos disponiveis em ordem decrescente de
+    feromonio (a partir da posicao atual), sorteando um bit por candidato;
+    aceita o primeiro candidato sorteado com 1 e rejeita (marca 0) os demais
+    ja testados nesta rodada. Retorna quantas posicoes deixaram de ser -1.
+    """
+    n = colony.shape[0]
+    consumed_total = 0
 
-    return deposit_factor / tour_length  # O(1)
+    for i in range(n):
+        if undefined_count[i] == 0:
+            continue
 
-# Função para escolher as próximas instâncias com base nas taxas de feromônio
-# Complexidade: O(num_ants * num_instances * log(num_instances))
-def get_probabilities_paths_ordered_greedy(ant: np.array, phe_trails) -> Tuple[Tuple[int, Any]]:
-    available_instances = np.nonzero(ant < 0)[0]  # O(num_ants * n_instances)
+        avail = np.nonzero(colony[i] < 0)[0]
+        if avail.size == 0:
+            undefined_count[i] = 0
+            continue
 
-    # Calcula as probabilidades com base nas trilhas de feromônio
-    smell = phe_trails[available_instances]  # O(num_ants * n_instances)
+        pher_vals = pheromone[last_pos[i], avail]
+        order = pher_vals.argsort()[::-1]
+        avail_sorted = avail[order]
 
-    sorted_probabilities = smell.argsort()[::-1]  # Ordena em ordem decrescente com base nos valores de feromônio
-    return tuple([(int(i), 1) for i in available_instances[sorted_probabilities]])  # O(num_ants * n_instances * log(n_instances))
+        bits = rng.integers(0, 2, size=avail_sorted.size)
+        ones = np.flatnonzero(bits)
 
-# Função para encontrar a melhor solução
-# Complexidade: O(num_ants * num_instances * num_attributes)
-def get_best_solution(ant_solutions: np.ndarray, X, Y) -> np.array:
-    accuracies = np.zeros(ant_solutions.shape[0], dtype=np.float64)  # O(num_ants)
-    best_solution = 0
-    for i, solution in enumerate(ant_solutions):
-        instances_selected = np.nonzero(solution)[0]  # O(n_instances)
-        X_train = X[instances_selected, :]
-        Y_train = Y[instances_selected]
-        classifier_1nn = KNeighborsClassifier(n_neighbors=1).fit(X_train, Y_train)  # O(n_instances * num_attributes)
-        Y_pred = classifier_1nn.predict(X)  # O(n_instances * num_attributes)
-        accuracy = accuracy_score(Y, Y_pred)  # O(n_instances)
-        accuracies[i] = accuracy  # O(num_ants)
-        if accuracy > accuracies[best_solution]:  # O(num_ants)
-            best_solution = i  # O(num_ants)
+        if ones.size > 0:
+            accept_pos = ones[0]
+            if accept_pos > 0:
+                colony[i, avail_sorted[:accept_pos]] = 0
+            accepted = avail_sorted[accept_pos]
+            colony[i, accepted] = 1
 
-    return ant_solutions[best_solution]  # O(n_instances)
+            length = path_lengths[i]
+            path_from[i, length] = last_pos[i]
+            path_to[i, length] = accepted
+            path_lengths[i] = length + 1
+            tour_length[i] += distances[last_pos[i], accepted]
+            last_pos[i] = accepted
 
-# Função para executar o algoritmo de otimização da colônia de formigas
-# e selecionar instâncias relevantes para a classificação.
-# Complexidade: O(num_ants * num_instances^2 * num_attributes)
-def run_colony(X, Y, initial_pheromone, evaporarion_rate, Q):
-    distances = get_pairwise_distance(X)  # O(n_instances^2 * num_attributes)
-    visibility_rates = get_visibility_rates_by_distances(distances)  # O(n_instances^2)
-    the_colony = create_colony(X.shape[0])  # O(1)
-    for i in range(X.shape[0]):
-        the_colony[i, i] = 1  # O(num_ants)
+            consumed = accept_pos + 1
+        else:
+            colony[i, avail_sorted] = 0
+            consumed = avail_sorted.size
 
-    ant_choices = [[(i, i)] for i in range(the_colony.shape[0])]  # O(num_ants)
-    pheromone_trails = create_pheromone_trails(distances, initial_pheromone)  # O(n_instances^2 * num_attributes)
-    while -1 in the_colony:  # Loop executa no máximo num_ants * num_ants vezes
+        undefined_count[i] -= consumed
+        consumed_total += consumed
 
-        # Cada formiga escolhe sua próxima instância
-        for i, ant in enumerate(the_colony):  # Loop executa num_ants vezes
+    return consumed_total
 
-            if -1 in ant:  # O(1)
-                last_choice = ant_choices[i][-1]  # O(1)
-                ant_pos = last_choice[1]  # O(1)
-                choices = get_probabilities_paths_ordered_greedy(ant, pheromone_trails[ant_pos, :])  # O(num_ants * n_instances * log(n_instances))
 
-                for choice in choices:
-                    next_instance = choice[0]  # O(1)
-                    probability = choice[1]  # O(1)
+def update_pheromones(pheromone, path_from, path_to, path_lengths, tour_length, q,
+                       evaporation_rate):
+    n = pheromone.shape[0]
+    deposit = np.divide(q, tour_length, out=np.zeros(n), where=tour_length > 0)
 
-                    ajk = random.randint(0, 1)  # O(num_ants)
-                    final_probability = probability * ajk  # O(num_ants)
-                    if final_probability != 0:
-                        ant_choices[i].append((ant_pos, next_instance))  # O(1)
-                        the_colony[i, next_instance] = 1  # O(1)
-                        break
-                    else:
-                        the_colony[i, next_instance] = 0  # O(1)
+    for i in range(n):
+        length = path_lengths[i]
+        if length > 1:
+            pheromone[path_from[i, 1:length], path_to[i, 1:length]] += deposit[i]
 
-        # Formigas depositam os feromônios
-        for i in range(the_colony.shape[0]):  # Loop executa num_ants vezes
-            ant_deposit = get_pheromone_deposit(ant_choices[i], distances, Q)  # O(num_ants * n_instances^2 * num_attributes)
-            for path in ant_choices[i][1:]:  # Nunca deposita em feromônio onde i == j!
-                pheromone_trails[path[0], path[1]] += ant_deposit  # O(num_ants * n_instances^2 * num_attributes)
+    pheromone *= (1.0 - evaporation_rate)
 
-        # Evaporação dos feromônios
-        for i in range(pheromone_trails.shape[0]):  # Loop executa n_instances vezes
-            for j in range(pheromone_trails.shape[1]):  # Loop executa n_instances vezes
-                pheromone_trails[i, j] = (1 - evaporarion_rate) * pheromone_trails[i, j]  # O(n_instances^2 * num_attributes)
 
-    instances_selected = np.nonzero(get_best_solution(the_colony, X, Y))[0]  # O(n_instances)
-    return instances_selected
+def evaluate_solutions_1nn(colony: np.ndarray, distances: np.ndarray, y: np.ndarray):
+    n = colony.shape[0]
+    best_ant = -1
+    best_correct = -1
 
-def main():
-    start_time = time.time()
-    original_df = pd.read_csv("haberman.csv", sep=';')  # O(n_instances * num_attributes)
+    for i in range(n):
+        selected_idx = np.nonzero(colony[i] != 0)[0]
+        if selected_idx.size == 0:
+            continue
+        sub = distances[:, selected_idx]
+        nearest_local = sub.argmin(axis=1)
+        predicted = y[selected_idx[nearest_local]]
+        correct = int(np.count_nonzero(predicted == y))
+        if correct > best_correct:
+            best_correct = correct
+            best_ant = i
 
-    dataframe = pd.read_csv("haberman.csv", sep=';')  # O(n_instances * num_attributes)
+    selected_indices = np.nonzero(colony[best_ant] != 0)[0]
+    accuracy = best_correct / n
+    return selected_indices, accuracy
 
-    classes = dataframe["class"]  # O(n_instances)
-    dataframe = dataframe.drop(columns=["class"])  # O(n_instances * num_attributes)
-    initial_pheromone = 1  # O(1)
-    Q = 1  # O(1)
-    evaporation_rate = 0.1  # O(1)
-    print('Iniciando busca')
-    indices_selected = run_colony(dataframe.to_numpy(), classes.to_numpy(),
-                                  initial_pheromone, evaporation_rate, Q)  # O(n_instances^2 * num_attributes)
-    print('Fim da busca')
-    print(len(indices_selected))  # O(1)
 
-    reduced_dataframe = original_df.iloc[indices_selected]  # O(n_instances * num_attributes)
-    reduced_dataframe.to_csv('Home_reduzido.csv', index=False)  # O(n_instances * num_attributes)
-    print("Execução finalizada")
-    print("--- %s Horas ---" % ((time.time() - start_time) // 3600))  # O(1)
-    print("--- %s Minutos ---" % ((time.time() - start_time) // 60))  # O(1)
-    print("--- %s Segundos ---" % (time.time() - start_time))  # O(1)
+def run_colony(X: np.ndarray, Y: np.ndarray, initial_pheromone: float,
+               evaporation_rate: float, Q: float, rng: np.random.Generator):
+    """Executa o ACO guloso e retorna (indices_selecionados, acuracia, tempo_aco, tempo_1nn)."""
+    n = X.shape[0]
+    distances = get_pairwise_distance(X)
+    pheromone = create_pheromone_trails(n, initial_pheromone)
+    colony = create_colony(n)
 
-if __name__ == '__main__':
-    main()
+    path_from = np.empty((n, n), dtype=np.int32)
+    path_to = np.empty((n, n), dtype=np.int32)
+    path_lengths = np.ones(n, dtype=np.int64)
+    path_from[:, 0] = np.arange(n)
+    path_to[:, 0] = np.arange(n)
+    tour_length = np.zeros(n, dtype=np.float64)
+    last_pos = np.arange(n)
+    undefined_count = np.full(n, n - 1, dtype=np.int64)
+    remaining_unknown = n * n - n
+
+    aco_start = time.perf_counter()
+    iteration = 0
+    while remaining_unknown > 0:
+        iteration += 1
+        consumed = choose_paths_greedy_round(
+            colony, pheromone, distances, last_pos, undefined_count,
+            path_from, path_to, path_lengths, tour_length, rng,
+        )
+        remaining_unknown -= consumed
+
+        update_pheromones(pheromone, path_from, path_to, path_lengths, tour_length, Q,
+                           evaporation_rate)
+
+        if iteration % 100 == 0 or remaining_unknown == 0:
+            print(f"Iteracao {iteration} concluida; posicoes indefinidas restantes: {remaining_unknown}")
+    aco_seconds = time.perf_counter() - aco_start
+
+    knn_start = time.perf_counter()
+    selected_indices, accuracy = evaluate_solutions_1nn(colony, distances, Y)
+    knn_seconds = time.perf_counter() - knn_start
+
+    return selected_indices, accuracy, aco_seconds, knn_seconds
