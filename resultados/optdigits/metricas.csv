@@ -1,0 +1,5 @@
+dataset,version,n_samples,n_treino,n_teste,accuracy,accuracy_std,f1,auc,delta,taxa_retencao
+optdigits,original,5620,4215,1405,0.9466,0.0078,0.9466,,0.0,1.0
+optdigits,python,2881,2160,721,0.939,0.0078,0.9393,,-0.0076,0.5126
+optdigits,c,2779,2084,695,0.9381,0.0081,0.9388,,-0.0085,0.4945
+optdigits,cuda,2839,2129,710,0.9338,0.0064,0.9339,,-0.0128,0.5052

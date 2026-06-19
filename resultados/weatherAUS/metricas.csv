@@ -1,0 +1,5 @@
+dataset,version,n_samples,n_treino,n_teste,accuracy,accuracy_std,f1,auc,delta,taxa_retencao
+weatherAUS,original,5620,4215,1405,0.8548,0.0062,0.8395,0.8905,0.0,1.0
+weatherAUS,python,2848,2136,712,0.8258,0.0061,0.8102,0.8677,-0.029,0.5068
+weatherAUS,c,2790,2092,698,0.8381,0.0084,0.8231,0.8691,-0.0167,0.4964
+weatherAUS,cuda,2925,2193,732,0.8456,0.0066,0.8295,0.8351,-0.0092,0.5205

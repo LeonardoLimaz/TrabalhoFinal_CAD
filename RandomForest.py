@@ -1,19 +1,18 @@
 import os
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OrdinalEncoder, LabelEncoder
-from sklearn.pipeline import make_pipeline
-from sklearn.metrics import roc_auc_score, roc_curve, accuracy_score
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import roc_auc_score, roc_curve, accuracy_score, f1_score
 
 import warnings
 warnings.filterwarnings("ignore")
 
-# ─── Dataset configuration ────────────────────────────────────────────────────
 DATASETS = {
     "yeast": {
         "multiclass": True,
@@ -28,6 +27,7 @@ DATASETS = {
         "multiclass": True,
         "versions": {
             "original": "dataset/optdigits_csv.csv",
+            "python":   "dataset/optdigits_reduzido_python_seed42.csv",
             "c":        "dataset/optdigits_reduzido_c_seed42.csv",
             "cuda":     "dataset/optdigits_reduzido_cuda_seed42.csv",
         },
@@ -36,156 +36,199 @@ DATASETS = {
         "multiclass": False,
         "versions": {
             "original": "dataset/vh_data15.csv",
+            "python":   "dataset/vh_data15_reduzido_python_seed42.csv",
             "c":        "dataset/vh_data15_reduzido_c_seed42.csv",
             "cuda":     "dataset/vh_data15_reduzido_cuda_seed42.csv",
         },
     },
+    "covtype": {
+        "multiclass": True,
+        "versions": {
+            "original": "dataset/covtype_sample.csv",
+            "python":   "dataset/covtype_reduzido_python_seed42.csv",
+            "c":        "dataset/covtype_reduzido_c_seed42.csv",
+            "cuda":     "dataset/covtype_reduzido_cuda_seed42.csv",
+        },
+    },
+    "weatherAUS": {
+        "multiclass": False,
+        "versions": {
+            "original": "dataset/weatherAUS_sample.csv",
+            "python":   "dataset/weatherAUS_reduzido_python_seed42.csv",
+            "c":        "dataset/weatherAUS_reduzido_c_seed42.csv",
+            "cuda":     "dataset/weatherAUS_reduzido_cuda_seed42.csv",
+        },
+    },
 }
 
-# ─── Main loop ────────────────────────────────────────────────────────────────
+VERSION_ORDER  = ["original", "python", "c", "cuda"]
+VERSION_COLORS = {
+    "original": "#888888",
+    "python":   "#55A868",
+    "c":        "#DD8452",
+    "cuda":     "#4C72B0",
+}
+
+
+
+def build_model(X_train: pd.DataFrame) -> Pipeline:
+    """
+    Pipeline: pré-processamento → RandomForest.
+
+    Colunas categóricas : OrdinalEncoder (desconhecidos → -1)
+    Colunas numéricas   : SimpleImputer(mediana) + passthrough
+                          → necessário para vh_data15, que tem NaN em 36 colunas
+    max_depth=5         : conservador; análise de gap treino/validação mostrou
+                          overfitting severo em yeast (gap +0.23) com depth=10
+    """
+    cat_cols = X_train.select_dtypes(exclude="number").columns.tolist()
+    num_cols = X_train.select_dtypes(include="number").columns.tolist()
+
+    transformers = []
+    if cat_cols:
+        transformers.append((
+            "cat",
+            OrdinalEncoder(
+                handle_unknown="use_encoded_value",
+                unknown_value=-1,
+                encoded_missing_value=-1,
+            ),
+            cat_cols,
+        ))
+    if num_cols:
+        transformers.append((
+            "num",
+            Pipeline([("imputer", SimpleImputer(strategy="median"))]),
+            num_cols,
+        ))
+
+    return Pipeline([
+        ("preprocessor", ColumnTransformer(transformers=transformers)),
+        ("classifier", RandomForestClassifier(
+            n_estimators=100,
+            max_depth=5,
+            random_state=0,
+        )),
+    ])
+
+
+
 all_results = []
+binary_roc  = {}  
 
 for dataset_name, config in DATASETS.items():
     is_multiclass = config["multiclass"]
-    output_dir = os.path.join("resultados", dataset_name)
+    output_dir    = os.path.join("resultados", dataset_name)
     os.makedirs(output_dir, exist_ok=True)
 
     dataset_results = []
-
-    if not is_multiclass:
-        plt.figure()
+    n_original   = None   
+    acc_original = None   
 
     for version_name, path in config["versions"].items():
+        if not os.path.exists(path):
+            print(f"[AVISO] Arquivo não encontrado, pulando: {path}")
+            continue
+
         data = pd.read_csv(path)
-        X = data.iloc[:, :-1]
-        y = data.iloc[:, -1]
+        X    = data.iloc[:, :-1]
+        y    = data.iloc[:, -1]
 
-        # encode string targets
-        if y.dtype == object or str(y.dtype) == "str":
+        
+        if not pd.api.types.is_numeric_dtype(y):
             y = LabelEncoder().fit_transform(y)
+        else:
+            y = y.to_numpy()
 
+        # stratify preserva proporção das classes no split
+        # crítico para yeast (classe mínima 0.34%) e covtype (0.48%)
         X_train, X_valid, y_train, y_valid = train_test_split(
-            X, y, test_size=0.25, random_state=0
+            X, y, test_size=0.25, random_state=0, stratify=y
         )
 
-        # auto-detect column types
-        categorical_cols = X_train.select_dtypes(exclude="number").columns.tolist()
-        numerical_cols   = X_train.select_dtypes(include="number").columns.tolist()
-
-        transformers = []
-        if categorical_cols:
-            transformers.append(("cat", OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1, encoded_missing_value=-1), categorical_cols))
-        if numerical_cols:
-            transformers.append(("num", "passthrough", numerical_cols))
-
-        model = make_pipeline(
-            ColumnTransformer(transformers=transformers),
-            RandomForestClassifier(n_estimators=100, max_depth=5, random_state=0),
-        )
-
+        model = build_model(X_train)
         model.fit(X_train, y_train)
+
         y_pred       = model.predict(X_valid)
         y_pred_proba = model.predict_proba(X_valid)
+        accuracy     = accuracy_score(y_valid, y_pred)
 
-        accuracy = accuracy_score(y_valid, y_pred)
+        # F1 ponderado — robusto a desbalanceamento de classes
+        f1 = f1_score(y_valid, y_pred, average="weighted", zero_division=0)
 
-        if is_multiclass:
-            auc = None
-        else:
+        # Desvio padrão via 5-fold CV estratificado no dataset completo
+        cv      = StratifiedKFold(n_splits=5, shuffle=True, random_state=0)
+        cv_acc  = cross_val_score(build_model(X), X, y, cv=cv, scoring="accuracy")
+        acc_std = float(cv_acc.std())
+
+        auc = None
+        if not is_multiclass:
             auc = roc_auc_score(y_valid, y_pred_proba[:, 1])
             fpr, tpr, _ = roc_curve(y_valid, y_pred_proba[:, 1])
-            plt.plot(fpr, tpr, label=f"{version_name} (AUC={auc:.3f})")
+            binary_roc.setdefault(dataset_name, {})[version_name] = (fpr, tpr, auc)
+
+        if version_name == "original":
+            n_original   = len(data)
+            acc_original = accuracy
 
         row = {
-            "dataset":   dataset_name,
-            "version":   version_name,
-            "n_samples": len(data),
-            "accuracy":  round(accuracy, 4),
-            "auc":       round(auc, 4) if auc is not None else None,
+            "dataset":      dataset_name,
+            "version":      version_name,
+            "n_samples":    len(data),
+            "n_treino":     len(X_train),
+            "n_teste":      len(X_valid),
+            "accuracy":     round(accuracy, 4),
+            "accuracy_std": round(acc_std, 4),
+            "f1":           round(f1, 4),
+            "auc":          round(auc, 4) if auc is not None else None,
+            "delta":        round(accuracy - acc_original, 4) if acc_original is not None else None,
+            "taxa_retencao": round(len(data) / n_original, 4) if n_original else None,
         }
         dataset_results.append(row)
         all_results.append(row)
 
         auc_str = f"auc={auc:.3f}" if auc is not None else "auc=N/A"
-        print(f"{dataset_name:12} | {version_name:8} | n={len(data):5} | acc={accuracy:.3f} | {auc_str}")
+        print(f"{dataset_name:12} | {version_name:8} | n={len(data):6} | "
+              f"acc={accuracy:.4f} ± {acc_std:.4f} | f1={f1:.4f} | {auc_str}")
 
-    # ROC curve — only for binary datasets
-    if not is_multiclass:
-        plt.title(f"Curva ROC — {dataset_name}")
-        plt.xlabel("Taxa de Falsos Positivos")
-        plt.ylabel("Taxa de Verdadeiros Positivos")
-        plt.legend()
-        plt.tight_layout()
-        plt.savefig(os.path.join(output_dir, "roc_comparison.png"))
-        plt.close()
-
+    
     pd.DataFrame(dataset_results).to_csv(
         os.path.join(output_dir, "metricas.csv"), index=False
     )
 
-# ─── Consolidated comparison ──────────────────────────────────────────────────
+
 results_df = pd.DataFrame(all_results)
+results_df.to_csv("resultados/metricas_geral.csv", index=False)
+print("\nSalvo: resultados/metricas_geral.csv")
 
-# compute accuracy delta relative to original
-originals = results_df[results_df["version"] == "original"].set_index("dataset")["accuracy"]
-results_df["delta"] = results_df.apply(
-    lambda r: r["accuracy"] - originals[r["dataset"]], axis=1
-)
-reduced_df = results_df[~results_df["version"].isin(["original", "python"])]
 
-colors = {"c": "#DD8452", "cuda": "#4C72B0"}
+for ds_name, roc_data in binary_roc.items():
+    fig, ax = plt.subplots(figsize=(7, 5))
 
-fig, axes = plt.subplots(1, 2, figsize=(16, 6))
-
-# ── Delta chart ───────────────────────────────────────────────────────────────
-for version, group in reduced_df.groupby("version"):
-    axes[0].bar(
-        [d + f"\n({version})" for d in group["dataset"]],
-        group["delta"],
-        color=colors.get(version, "gray"),
-        label=version,
-    )
-axes[0].axhline(0, color="black", linewidth=0.8, linestyle="--")
-axes[0].set_title("Delta de Acurácia vs Original")
-axes[0].set_ylabel("Δ acurácia (reduzido − original)")
-axes[0].set_xlabel("Dataset / Versão")
-axes[0].legend(title="Versão")
-axes[0].tick_params(axis="x", rotation=30)
-
-# ── Line chart: accuracy per version ─────────────────────────────────────────
-version_order = ["original", "c", "cuda"]
-palette = {"yeast": "#C94040", "optdigits": "#55A868", "vh_data15": "#7A5C99"}
-offsets = {"optdigits": 8, "vh_data15": -14, "yeast": 8}
-
-for ds_name, group in results_df.groupby("dataset"):
-    group = group.set_index("version").reindex([v for v in version_order if v in group["version"].values])
-    axes[1].plot(
-        group.index, group["accuracy"],
-        marker="o", label=ds_name,
-        color=palette.get(ds_name, "gray"), linewidth=2, markersize=7,
-    )
-    for version, row in group.iterrows():
-        axes[1].annotate(
-            f"n={int(row['n_samples'])}",
-            (version, row["accuracy"]),
-            textcoords="offset points",
-            xytext=(0, offsets.get(ds_name, 8)),
-            fontsize=7, ha="center",
-            color=palette.get(ds_name, "gray"),
-            annotation_clip=False,
+    for version in VERSION_ORDER:
+        if version not in roc_data:
+            continue
+        fpr, tpr, auc = roc_data[version]
+        ax.plot(
+            fpr, tpr,
+            color=VERSION_COLORS[version],
+            linestyle="--" if version == "original" else "-",
+            linewidth=1.8,
+            label=f"{version}  (AUC = {auc:.3f})",
         )
 
-axes[1].set_title("Acurácia por Versão")
-axes[1].set_xlabel("Versão")
-axes[1].set_ylabel("Acurácia")
-axes[1].legend(title="Dataset")
-axes[1].grid(True, linestyle="--", alpha=0.4)
-axes[1].margins(x=0.15)
+    ax.plot([0, 1], [0, 1], color="black", linestyle=":", linewidth=0.8,
+            label="Aleatório (AUC = 0.500)")
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1.02)
+    ax.set_title(f"Curva ROC — {ds_name}", fontsize=12)
+    ax.set_xlabel("Taxa de Falsos Positivos")
+    ax.set_ylabel("Taxa de Verdadeiros Positivos")
+    ax.legend(fontsize=9, loc="lower right")
+    ax.grid(True, linestyle="--", alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(os.path.join("resultados", ds_name, "roc_comparison.png"), dpi=150)
+    plt.close()
+    print(f"Salvo: resultados/{ds_name}/roc_comparison.png")
 
-plt.suptitle("Original vs Reduzido — Comparação Random Forest")
-plt.tight_layout()
-plt.savefig("resultados/comparacao_geral.png", bbox_inches="tight")
-plt.close()
-
-results_df.to_csv("resultados/metricas_geral.csv", index=False)
-print("\nDone. Results saved in 'resultados/'.")
+print("\nTreino concluído. Execute PlotResultados.py para gerar os gráficos de comparação.")

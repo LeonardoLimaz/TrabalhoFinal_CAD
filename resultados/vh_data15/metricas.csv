@@ -1,0 +1,5 @@
+dataset,version,n_samples,n_treino,n_teste,accuracy,accuracy_std,f1,auc,delta,taxa_retencao
+vh_data15,original,3353,2514,839,0.8868,0.0068,0.8812,0.9143,0.0,1.0
+vh_data15,python,1746,1309,437,0.8879,0.0103,0.8836,0.917,0.0011,0.5207
+vh_data15,c,1747,1310,437,0.8947,0.011,0.8895,0.9293,0.008,0.521
+vh_data15,cuda,1726,1294,432,0.875,0.0194,0.8684,0.8873,-0.0118,0.5148

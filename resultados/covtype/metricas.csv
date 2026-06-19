@@ -1,0 +1,5 @@
+dataset,version,n_samples,n_treino,n_teste,accuracy,accuracy_std,f1,auc,delta,taxa_retencao
+covtype,original,5620,4215,1405,0.6769,0.01,0.6469,,0.0,1.0
+covtype,python,2868,2151,717,0.6778,0.0155,0.6473,,0.001,0.5103
+covtype,c,2865,2148,717,0.6709,0.016,0.6373,,-0.006,0.5098
+covtype,cuda,2904,2178,726,0.6625,0.0134,0.6306,,-0.0143,0.5167
