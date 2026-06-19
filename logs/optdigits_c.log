@@ -1,0 +1,233 @@
+nohup: ignorando entrada
+Arquivo: dataset/optdigits_csv.csv
+Instancias: 5620 | Atributos: 64 | Classes: 10 | Alvo: class
+Parametros: feromonio inicial=1 | evaporacao=0.1 | Q=1
+Seeds: 0, 42, 123, 789, 1024
+Iniciando execucoes C
+
+Seed 0
+Iteracao 100 concluida; posicoes indefinidas restantes: 30453849
+Iteracao 200 concluida; posicoes indefinidas restantes: 29329416
+Iteracao 300 concluida; posicoes indefinidas restantes: 28205830
+Iteracao 400 concluida; posicoes indefinidas restantes: 27082534
+Iteracao 500 concluida; posicoes indefinidas restantes: 25958026
+Iteracao 600 concluida; posicoes indefinidas restantes: 24833699
+Iteracao 700 concluida; posicoes indefinidas restantes: 23711089
+Iteracao 800 concluida; posicoes indefinidas restantes: 22586383
+Iteracao 900 concluida; posicoes indefinidas restantes: 21464321
+Iteracao 1000 concluida; posicoes indefinidas restantes: 20341784
+Iteracao 1100 concluida; posicoes indefinidas restantes: 19217064
+Iteracao 1200 concluida; posicoes indefinidas restantes: 18091557
+Iteracao 1300 concluida; posicoes indefinidas restantes: 16967015
+Iteracao 1400 concluida; posicoes indefinidas restantes: 15842411
+Iteracao 1500 concluida; posicoes indefinidas restantes: 14716436
+Iteracao 1600 concluida; posicoes indefinidas restantes: 13591550
+Iteracao 1700 concluida; posicoes indefinidas restantes: 12466795
+Iteracao 1800 concluida; posicoes indefinidas restantes: 11342641
+Iteracao 1900 concluida; posicoes indefinidas restantes: 10218069
+Iteracao 2000 concluida; posicoes indefinidas restantes: 9093366
+Iteracao 2100 concluida; posicoes indefinidas restantes: 7970605
+Iteracao 2200 concluida; posicoes indefinidas restantes: 6846996
+Iteracao 2300 concluida; posicoes indefinidas restantes: 5723512
+Iteracao 2400 concluida; posicoes indefinidas restantes: 4599099
+Iteracao 2500 concluida; posicoes indefinidas restantes: 3474784
+Iteracao 2600 concluida; posicoes indefinidas restantes: 2351684
+Iteracao 2700 concluida; posicoes indefinidas restantes: 1229037
+Iteracao 2800 concluida; posicoes indefinidas restantes: 224647
+Iteracao 2900 concluida; posicoes indefinidas restantes: 1055
+Iteracao 2951 concluida; posicoes indefinidas restantes: 0
+Instancias selecionadas: 2849
+Acuracia 1-NN da melhor solucao: 0.995552
+Tempo ACO: 279.037570 segundos
+Tempo avaliacao 1-NN: 207.020425 segundos
+Tempo run_colony: 486.404315 segundos
+Tempo total seed: 486.404843 segundos
+CSV reduzido salvo em: dataset/optdigits_reduzido_c_seed0.csv
+
+Seed 42
+Iteracao 100 concluida; posicoes indefinidas restantes: 30455628
+Iteracao 200 concluida; posicoes indefinidas restantes: 29330941
+Iteracao 300 concluida; posicoes indefinidas restantes: 28206391
+Iteracao 400 concluida; posicoes indefinidas restantes: 27081540
+Iteracao 500 concluida; posicoes indefinidas restantes: 25956820
+Iteracao 600 concluida; posicoes indefinidas restantes: 24831864
+Iteracao 700 concluida; posicoes indefinidas restantes: 23708097
+Iteracao 800 concluida; posicoes indefinidas restantes: 22584524
+Iteracao 900 concluida; posicoes indefinidas restantes: 21460060
+Iteracao 1000 concluida; posicoes indefinidas restantes: 20336211
+Iteracao 1100 concluida; posicoes indefinidas restantes: 19212306
+Iteracao 1200 concluida; posicoes indefinidas restantes: 18089064
+Iteracao 1300 concluida; posicoes indefinidas restantes: 16967172
+Iteracao 1400 concluida; posicoes indefinidas restantes: 15842683
+Iteracao 1500 concluida; posicoes indefinidas restantes: 14717036
+Iteracao 1600 concluida; posicoes indefinidas restantes: 13592615
+Iteracao 1700 concluida; posicoes indefinidas restantes: 12469131
+Iteracao 1800 concluida; posicoes indefinidas restantes: 11343491
+Iteracao 1900 concluida; posicoes indefinidas restantes: 10219390
+Iteracao 2000 concluida; posicoes indefinidas restantes: 9095599
+Iteracao 2100 concluida; posicoes indefinidas restantes: 7971970
+Iteracao 2200 concluida; posicoes indefinidas restantes: 6847425
+Iteracao 2300 concluida; posicoes indefinidas restantes: 5724178
+Iteracao 2400 concluida; posicoes indefinidas restantes: 4599727
+Iteracao 2500 concluida; posicoes indefinidas restantes: 3474498
+Iteracao 2600 concluida; posicoes indefinidas restantes: 2350036
+Iteracao 2700 concluida; posicoes indefinidas restantes: 1227297
+Iteracao 2800 concluida; posicoes indefinidas restantes: 224224
+Iteracao 2900 concluida; posicoes indefinidas restantes: 955
+Iteracao 2934 concluida; posicoes indefinidas restantes: 0
+Instancias selecionadas: 2779
+Acuracia 1-NN da melhor solucao: 0.995552
+Tempo ACO: 278.310031 segundos
+Tempo avaliacao 1-NN: 208.547967 segundos
+Tempo run_colony: 487.193062 segundos
+Tempo total seed: 487.193615 segundos
+CSV reduzido salvo em: dataset/optdigits_reduzido_c_seed42.csv
+
+Seed 123
+Iteracao 100 concluida; posicoes indefinidas restantes: 30454972
+Iteracao 200 concluida; posicoes indefinidas restantes: 29331121
+Iteracao 300 concluida; posicoes indefinidas restantes: 28205275
+Iteracao 400 concluida; posicoes indefinidas restantes: 27081987
+Iteracao 500 concluida; posicoes indefinidas restantes: 25958323
+Iteracao 600 concluida; posicoes indefinidas restantes: 24834230
+Iteracao 700 concluida; posicoes indefinidas restantes: 23708326
+Iteracao 800 concluida; posicoes indefinidas restantes: 22584063
+Iteracao 900 concluida; posicoes indefinidas restantes: 21459239
+Iteracao 1000 concluida; posicoes indefinidas restantes: 20335038
+Iteracao 1100 concluida; posicoes indefinidas restantes: 19211205
+Iteracao 1200 concluida; posicoes indefinidas restantes: 18085240
+Iteracao 1300 concluida; posicoes indefinidas restantes: 16962059
+Iteracao 1400 concluida; posicoes indefinidas restantes: 15839370
+Iteracao 1500 concluida; posicoes indefinidas restantes: 14714125
+Iteracao 1600 concluida; posicoes indefinidas restantes: 13589215
+Iteracao 1700 concluida; posicoes indefinidas restantes: 12467175
+Iteracao 1800 concluida; posicoes indefinidas restantes: 11342728
+Iteracao 1900 concluida; posicoes indefinidas restantes: 10218992
+Iteracao 2000 concluida; posicoes indefinidas restantes: 9095105
+Iteracao 2100 concluida; posicoes indefinidas restantes: 7973528
+Iteracao 2200 concluida; posicoes indefinidas restantes: 6849330
+Iteracao 2300 concluida; posicoes indefinidas restantes: 5724030
+Iteracao 2400 concluida; posicoes indefinidas restantes: 4602573
+Iteracao 2500 concluida; posicoes indefinidas restantes: 3475881
+Iteracao 2600 concluida; posicoes indefinidas restantes: 2351548
+Iteracao 2700 concluida; posicoes indefinidas restantes: 1228282
+Iteracao 2800 concluida; posicoes indefinidas restantes: 225721
+Iteracao 2900 concluida; posicoes indefinidas restantes: 1088
+Iteracao 2936 concluida; posicoes indefinidas restantes: 0
+Instancias selecionadas: 2770
+Acuracia 1-NN da melhor solucao: 0.995374
+Tempo ACO: 280.006735 segundos
+Tempo avaliacao 1-NN: 209.401949 segundos
+Tempo run_colony: 489.740625 segundos
+Tempo total seed: 489.741127 segundos
+CSV reduzido salvo em: dataset/optdigits_reduzido_c_seed123.csv
+
+Seed 789
+Iteracao 100 concluida; posicoes indefinidas restantes: 30455531
+Iteracao 200 concluida; posicoes indefinidas restantes: 29331173
+Iteracao 300 concluida; posicoes indefinidas restantes: 28208506
+Iteracao 400 concluida; posicoes indefinidas restantes: 27083760
+Iteracao 500 concluida; posicoes indefinidas restantes: 25958459
+Iteracao 600 concluida; posicoes indefinidas restantes: 24833775
+Iteracao 700 concluida; posicoes indefinidas restantes: 23709869
+Iteracao 800 concluida; posicoes indefinidas restantes: 22584855
+Iteracao 900 concluida; posicoes indefinidas restantes: 21461198
+Iteracao 1000 concluida; posicoes indefinidas restantes: 20337748
+Iteracao 1100 concluida; posicoes indefinidas restantes: 19212658
+Iteracao 1200 concluida; posicoes indefinidas restantes: 18087191
+Iteracao 1300 concluida; posicoes indefinidas restantes: 16962421
+Iteracao 1400 concluida; posicoes indefinidas restantes: 15840296
+Iteracao 1500 concluida; posicoes indefinidas restantes: 14715161
+Iteracao 1600 concluida; posicoes indefinidas restantes: 13591669
+Iteracao 1700 concluida; posicoes indefinidas restantes: 12465789
+Iteracao 1800 concluida; posicoes indefinidas restantes: 11340976
+Iteracao 1900 concluida; posicoes indefinidas restantes: 10216774
+Iteracao 2000 concluida; posicoes indefinidas restantes: 9093719
+Iteracao 2100 concluida; posicoes indefinidas restantes: 7967812
+Iteracao 2200 concluida; posicoes indefinidas restantes: 6845231
+Iteracao 2300 concluida; posicoes indefinidas restantes: 5722943
+Iteracao 2400 concluida; posicoes indefinidas restantes: 4598380
+Iteracao 2500 concluida; posicoes indefinidas restantes: 3473472
+Iteracao 2600 concluida; posicoes indefinidas restantes: 2349567
+Iteracao 2700 concluida; posicoes indefinidas restantes: 1223419
+Iteracao 2800 concluida; posicoes indefinidas restantes: 222523
+Iteracao 2900 concluida; posicoes indefinidas restantes: 1115
+Iteracao 2950 concluida; posicoes indefinidas restantes: 0
+Instancias selecionadas: 2820
+Acuracia 1-NN da melhor solucao: 0.995552
+Tempo ACO: 281.794049 segundos
+Tempo avaliacao 1-NN: 209.129923 segundos
+Tempo run_colony: 491.255005 segundos
+Tempo total seed: 491.255502 segundos
+CSV reduzido salvo em: dataset/optdigits_reduzido_c_seed789.csv
+
+Seed 1024
+Iteracao 100 concluida; posicoes indefinidas restantes: 30452683
+Iteracao 200 concluida; posicoes indefinidas restantes: 29328476
+Iteracao 300 concluida; posicoes indefinidas restantes: 28204437
+Iteracao 400 concluida; posicoes indefinidas restantes: 27078038
+Iteracao 500 concluida; posicoes indefinidas restantes: 25954113
+Iteracao 600 concluida; posicoes indefinidas restantes: 24828757
+Iteracao 700 concluida; posicoes indefinidas restantes: 23705907
+Iteracao 800 concluida; posicoes indefinidas restantes: 22581630
+Iteracao 900 concluida; posicoes indefinidas restantes: 21458965
+Iteracao 1000 concluida; posicoes indefinidas restantes: 20333515
+Iteracao 1100 concluida; posicoes indefinidas restantes: 19208937
+Iteracao 1200 concluida; posicoes indefinidas restantes: 18085124
+Iteracao 1300 concluida; posicoes indefinidas restantes: 16961563
+Iteracao 1400 concluida; posicoes indefinidas restantes: 15838878
+Iteracao 1500 concluida; posicoes indefinidas restantes: 14715207
+Iteracao 1600 concluida; posicoes indefinidas restantes: 13591511
+Iteracao 1700 concluida; posicoes indefinidas restantes: 12467584
+Iteracao 1800 concluida; posicoes indefinidas restantes: 11344219
+Iteracao 1900 concluida; posicoes indefinidas restantes: 10220234
+Iteracao 2000 concluida; posicoes indefinidas restantes: 9095885
+Iteracao 2100 concluida; posicoes indefinidas restantes: 7972575
+Iteracao 2200 concluida; posicoes indefinidas restantes: 6849117
+Iteracao 2300 concluida; posicoes indefinidas restantes: 5726672
+Iteracao 2400 concluida; posicoes indefinidas restantes: 4602964
+Iteracao 2500 concluida; posicoes indefinidas restantes: 3477189
+Iteracao 2600 concluida; posicoes indefinidas restantes: 2353712
+Iteracao 2700 concluida; posicoes indefinidas restantes: 1227741
+Iteracao 2800 concluida; posicoes indefinidas restantes: 226375
+Iteracao 2900 concluida; posicoes indefinidas restantes: 1109
+Iteracao 2935 concluida; posicoes indefinidas restantes: 0
+Instancias selecionadas: 2813
+Acuracia 1-NN da melhor solucao: 0.995374
+Tempo ACO: 279.805393 segundos
+Tempo avaliacao 1-NN: 208.703549 segundos
+Tempo run_colony: 488.848450 segundos
+Tempo total seed: 488.848968 segundos
+CSV reduzido salvo em: dataset/optdigits_reduzido_c_seed1024.csv
+
+Resumo C
+Execucoes: 5
+Tempo medio run_colony: 488.688291 segundos
+Desvio padrao run_colony: 1.947648 segundos
+Tempo medio total por seed: 488.688811 segundos
+Desvio padrao total por seed: 1.947630 segundos
+Instancias selecionadas media: 2806.20
+Tempo total do experimento: 2443.483253 segundos
+	Command being timed: "./aco_c dataset/optdigits_csv.csv dataset/optdigits_reduzido_c.csv --target class --seeds 0,42,123,789,1024"
+	User time (seconds): 2442.72
+	System time (seconds): 0.76
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 40:44.12
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 690364
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 819415
+	Voluntary context switches: 2
+	Involuntary context switches: 24292
+	Swaps: 0
+	File system inputs: 1624
+	File system outputs: 4104
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

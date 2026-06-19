@@ -71,43 +71,48 @@ Execucoes feitas em um RTX 4060 TI e processador Ryzen 5700X3D para Python, C e 
 | CUDA vs C | 7.891200 / 0.311798 | **25.31x** |
 
 ---
+
 ## Dataset: vh_data15.csv
 Instancias: 3353 | Atributos: 41 | Classes: 2
 
 ### Versao C Sequencial
-| Seed | Instancias Selecionadas | Acuracia 1-NN | Tempo ACO (s) | Tempo 1-NN (s) | Tempo run_colony (s) |
-|-----:|------------------------:|:-------------:|--------------:|---------------:|---------------------:|
-| 0 | 1700 | 0.853564 | 84.406 | 38.521 | 123.093 |
-| 42 | 1747 | 0.851775 | 82.890 | 38.249 | 121.303 |
-| 123 | 1710 | 0.852669 | 83.654 | 38.414 | 122.229 |
-| 789 | 1669 | 0.852073 | 82.393 | 38.312 | 120.861 |
-| 1024 | 1712 | 0.853564 | 82.890 | 38.360 | 121.401 |
+| Seed | Instancias Selecionadas | Acuracia 1-NN | Tempo ACO (s) | Tempo 1-NN (s) | Tempo run_colony (s) | Tempo total seed (s) |
+|-----:|------------------------:|:-------------:|--------------:|---------------:|---------------------:|---------------------:|
+| 0 | 1700 | 0.853564 | 54.364164 | 43.797277 | 98.254161 | 98.254522 |
+| 42 | 1747 | 0.851775 | 54.276685 | 44.037504 | 98.404764 | 98.405143 |
+| 123 | 1710 | 0.852669 | 54.271744 | 43.857178 | 98.217623 | 98.217986 |
+| 789 | 1669 | 0.852073 | 54.308828 | 43.780535 | 98.178402 | 98.178762 |
+| 1024 | 1712 | 0.853564 | 54.203367 | 43.701929 | 97.993750 | 97.994109 |
 
 | Metrica | Valor |
 |---|---:|
-| Tempo medio run_colony | 121.777400 s |
-| Desvio padrao run_colony | 0.886181 s |
+| Tempo medio run_colony | 98.209740 s |
+| Desvio padrao run_colony | 0.148074 s |
+| Tempo medio total por seed | 98.210104 s |
+| Desvio padrao total por seed | 0.148081 s |
 | Media instancias selecionadas | 1707.60 |
-| Tempo total do experimento | 609.010000 s |
+| Tempo total do experimento | 491.086415 s |
 
 ### Versao CUDA
-| Seed | Instancias Selecionadas | Acuracia 1-NN | Tempo distancias (s) | Tempo ACO (s) | Tempo 1-NN (s) | Tempo run_colony (s) |
-|-----:|------------------------:|:-------------:|---------------------:|--------------:|---------------:|---------------------:|
-| 0 | 1741 | 0.855652 | 0.013615 | 4.180865 | 1.031662 | 5.370043 |
-| 42 | 1726 | 0.854160 | 0.011363 | 4.236742 | 1.074578 | 5.340975 |
-| 123 | 1760 | 0.852371 | 0.011349 | 4.306106 | 1.216457 | 5.544289 |
-| 789 | 1764 | 0.854459 | 0.011444 | 4.224703 | 1.186317 | 5.431912 |
-| 1024 | 1711 | 0.852967 | 0.011353 | 4.236651 | 1.082131 | 5.341916 |
+| Seed | Instancias Selecionadas | Acuracia 1-NN | Tempo distancias (s) | Tempo ACO (s) | Tempo 1-NN (s) | Tempo run_colony (s) | Tempo total seed (s) |
+|-----:|------------------------:|:-------------:|---------------------:|--------------:|---------------:|---------------------:|---------------------:|
+| 0 | 1741 | 0.855652 | 0.002792 | 0.929815 | 0.222413 | 1.414063 | 1.414405 |
+| 42 | 1726 | 0.854160 | 0.002259 | 0.922620 | 0.220740 | 1.150464 | 1.150806 |
+| 123 | 1760 | 0.852371 | 0.002261 | 0.923316 | 0.222047 | 1.152455 | 1.152770 |
+| 789 | 1764 | 0.854459 | 0.002256 | 0.929196 | 0.221511 | 1.157823 | 1.158162 |
+| 1024 | 1711 | 0.852967 | 0.002258 | 0.935218 | 0.221746 | 1.164057 | 1.164396 |
 
 | Metrica | Valor |
 |---|---:|
-| Tempo medio run_colony | 5.405827 s |
-| Desvio padrao run_colony | 0.085766 s |
+| Tempo medio run_colony | 1.207772 s |
+| Desvio padrao run_colony | 0.115440 s |
+| Tempo medio total por seed | 1.208108 s |
+| Desvio padrao total por seed | 0.115444 s |
 | Media instancias selecionadas | 1740.40 |
-| Tempo total do experimento | 27.113335 s |
+| Tempo total do experimento | 6.074633 s |
 
 ### Speedup CUDA vs C (vh_data15)
-Speedup medio run_colony: 121.777400 / 5.405827 = **22.53x**
+Speedup medio run_colony: 98.209740 / 1.207772 = **81.31x**
 
 ---
 
@@ -115,39 +120,43 @@ Speedup medio run_colony: 121.777400 / 5.405827 = **22.53x**
 Instancias: 5620 | Atributos: 64 | Classes: 10
 
 ### Versao C Sequencial
-| Seed | Instancias Selecionadas | Acuracia 1-NN | Tempo ACO (s) | Tempo 1-NN (s) | Tempo run_colony (s) |
-|-----:|------------------------:|:-------------:|--------------:|---------------:|---------------------:|
-| 0 | 2849 | 0.995552 | 445.347 | 136.234 | 582.239 |
-| 42 | 2779 | 0.995552 | 461.957 | 138.807 | 601.411 |
-| 123 | 2770 | 0.995374 | 466.883 | 137.501 | 605.040 |
-| 789 | 2820 | 0.995552 | 451.918 | 138.892 | 591.475 |
-| 1024 | 2813 | 0.995374 | 448.006 | 136.896 | 585.585 |
+| Seed | Instancias Selecionadas | Acuracia 1-NN | Tempo ACO (s) | Tempo 1-NN (s) | Tempo run_colony (s) | Tempo total seed (s) |
+|-----:|------------------------:|:-------------:|--------------:|---------------:|---------------------:|---------------------:|
+| 0 | 2849 | 0.995552 | 279.037570 | 207.020425 | 486.404315 | 486.404843 |
+| 42 | 2779 | 0.995552 | 278.310031 | 208.547967 | 487.193062 | 487.193615 |
+| 123 | 2770 | 0.995374 | 280.006735 | 209.401949 | 489.740625 | 489.741127 |
+| 789 | 2820 | 0.995552 | 281.794049 | 209.129923 | 491.255005 | 491.255502 |
+| 1024 | 2813 | 0.995374 | 279.805393 | 208.703549 | 488.848450 | 488.848968 |
 
 | Metrica | Valor |
 |---|---:|
-| Tempo medio run_colony | 593.150000 s |
-| Desvio padrao run_colony | 9.857751 s |
+| Tempo medio run_colony | 488.688291 s |
+| Desvio padrao run_colony | 1.947648 s |
+| Tempo medio total por seed | 488.688811 s |
+| Desvio padrao total por seed | 1.947630 s |
 | Media instancias selecionadas | 2806.20 |
-| Tempo total do experimento | 2965.832000 s |
+| Tempo total do experimento | 2443.483253 s |
 
 ### Versao CUDA
-| Seed | Instancias Selecionadas | Acuracia 1-NN | Tempo distancias (s) | Tempo ACO (s) | Tempo 1-NN (s) | Tempo run_colony (s) |
-|-----:|------------------------:|:-------------:|---------------------:|--------------:|---------------:|---------------------:|
-| 0 | 2884 | 0.996085 | 0.055863 | 18.875945 | 12.609711 | 31.645549 |
-| 42 | 2839 | 0.995552 | 0.047335 | 18.900082 | 12.995137 | 31.963733 |
-| 123 | 2827 | 0.995730 | 0.047582 | 18.908996 | 12.867987 | 31.845900 |
-| 789 | 2794 | 0.995552 | 0.047322 | 18.913883 | 12.747811 | 31.729868 |
-| 1024 | 2835 | 0.995552 | 0.047301 | 18.911900 | 12.809873 | 31.791640 |
+| Seed | Instancias Selecionadas | Acuracia 1-NN | Tempo distancias (s) | Tempo ACO (s) | Tempo 1-NN (s) | Tempo run_colony (s) | Tempo total seed (s) |
+|-----:|------------------------:|:-------------:|---------------------:|--------------:|---------------:|---------------------:|---------------------:|
+| 0 | 2884 | 0.996085 | 0.009102 | 3.892801 | 1.059400 | 5.109765 | 5.110255 |
+| 42 | 2839 | 0.995552 | 0.008509 | 3.898532 | 1.057934 | 4.978318 | 4.978879 |
+| 123 | 2827 | 0.995730 | 0.008425 | 3.883610 | 1.058088 | 4.963389 | 4.963969 |
+| 789 | 2794 | 0.995552 | 0.008497 | 3.895960 | 1.057660 | 4.975340 | 4.975826 |
+| 1024 | 2835 | 0.995552 | 0.008411 | 3.877239 | 1.057708 | 4.956686 | 4.957206 |
 
 | Metrica | Valor |
 |---|---:|
-| Tempo medio run_colony | 31.795338 s |
-| Desvio padrao run_colony | 0.120052 s |
+| Tempo medio run_colony | 4.996700 s |
+| Desvio padrao run_colony | 0.063813 s |
+| Tempo medio total por seed | 4.997227 s |
+| Desvio padrao total por seed | 0.063792 s |
 | Media instancias selecionadas | 2835.80 |
-| Tempo total do experimento | 159.052134 s |
+| Tempo total do experimento | 25.012993 s |
 
 ### Speedup CUDA vs C (optdigits)
-Speedup medio run_colony: 593.150000 / 31.795338 = **18.65x**
+Speedup medio run_colony: 488.688291 / 4.996700 = **97.80x**
 
 ---
 
@@ -255,11 +264,11 @@ Speedup medio run_colony: 518.248448 / 4.970554 = **104.26x**
 | Dataset | Instancias | Atributos | Speedup medio run_colony |
 |---|---:|---:|---:|
 | yeast | 1484 | 8 | 25.31x |
-| vh_data15 | 3353 | 41 | 22.53x |
-| optdigits | 5620 | 64 | 18.65x |
+| vh_data15 | 3353 | 41 | 81.31x |
+| optdigits | 5620 | 64 | 97.80x |
 | covtype_sample | 5620 | 54 | 104.11x |
 | weatherAUS_sample | 5620 | 21 | 104.26x |
-**Importante:** yeast, covtype_sample e weatherAUS_sample foram medidos nesta maquina local. vh_data15 e optdigits foram originalmente medidos em outra maquina (ver README). Por isso, comparacoes de tempo CUDA entre esses grupos de datasets devem ser tratadas como indicativas.
+**Importante:** yeast, covtype_sample e weatherAUS_sample foram medidos nesta maquina local. vh_data15 e optdigits tiveram os resultados C/CUDA atualizados a partir dos logs executados no SSH; as comparacoes com Python para esses dois datasets permanecem aproximadas porque o Python foi medido em outra maquina.
 
 ---
 
@@ -289,22 +298,17 @@ Os resultados atualizados do `yeast.csv` para Python, C e CUDA foram consolidado
 | Tempo total do experimento | 2165.375994 s |
 
 ### Speedup C e CUDA vs Python (vh_data15)
-> Atencao: C e CUDA medidos originalmente em RTX 4060 Ti; Python nesta maquina (RTX 4090). Comparacao aproximada.
+> Atencao: Python foi medido em outra maquina; os resultados C e CUDA abaixo foram atualizados a partir dos logs executados no SSH. Comparacao aproximada.
 
-| Seed | Tempo Python (s) | Tempo C (s) | Speedup C/Python | Tempo CUDA (s) | Speedup CUDA/Python |
-|-----:|-----------------:|------------:|-----------------:|---------------:|--------------------:|
-| 0 | 428.150 | 123.093 | 3.48x | 5.370 | 79.73x |
-| 42 | 427.852 | 121.303 | 3.53x | 5.341 | 80.11x |
-| 123 | 435.473 | 122.229 | 3.56x | 5.544 | 78.54x |
-| 789 | 436.331 | 120.861 | 3.61x | 5.432 | 80.33x |
-| 1024 | 437.480 | 121.401 | 3.60x | 5.342 | 81.90x |
-
-Speedup medio C/Python: 433.057004 / 121.777400 = **3.56x** (cross-machine)
-Speedup medio CUDA/Python: 433.057004 / 5.405827 = **80.11x** (cross-machine)
+| Comparacao | Calculo | Speedup medio run_colony |
+|---|---:|---:|
+| C vs Python | 433.057004 / 98.209740 | **4.41x** |
+| CUDA vs Python | 433.057004 / 1.207772 | **358.56x** |
+| CUDA vs C | 98.209740 / 1.207772 | **81.31x** |
 
 ---
 
-### Dataset: optdigits_csv.csv — Versao Python
+### Dataset: optdigits_csv.csv - Versao Python
 | Seed | Instancias Selecionadas | Acuracia 1-NN | Tempo ACO (s) | Tempo 1-NN (s) | Tempo run_colony (s) |
 |-----:|------------------------:|:-------------:|--------------:|---------------:|---------------------:|
 | 0 | 2792 | 0.995552 | 1177.840124 | 976.883790 | 2155.117319 |
@@ -321,18 +325,13 @@ Speedup medio CUDA/Python: 433.057004 / 5.405827 = **80.11x** (cross-machine)
 | Tempo total do experimento | 11012.557576 s |
 
 ### Speedup C e CUDA vs Python (optdigits)
-> Atencao: C e CUDA medidos originalmente em RTX 4060 Ti; Python nesta maquina (RTX 4090). Comparacao aproximada.
+> Atencao: Python foi medido em outra maquina; os resultados C e CUDA abaixo foram atualizados a partir dos logs executados no SSH. Comparacao aproximada.
 
-| Seed | Tempo Python (s) | Tempo C (s) | Speedup C/Python | Tempo CUDA (s) | Speedup CUDA/Python |
-|-----:|-----------------:|------------:|-----------------:|---------------:|--------------------:|
-| 0 | 2155.117 | 582.239 | 3.70x | 31.646 | 68.11x |
-| 42 | 2158.006 | 601.411 | 3.59x | 31.964 | 67.52x |
-| 123 | 2285.607 | 605.040 | 3.78x | 31.846 | 71.78x |
-| 789 | 2153.136 | 591.475 | 3.64x | 31.730 | 67.86x |
-| 1024 | 2260.614 | 585.585 | 3.86x | 31.792 | 71.11x |
-
-Speedup medio C/Python: 2202.496101 / 593.150000 = **3.71x** (cross-machine)
-Speedup medio CUDA/Python: 2202.496101 / 31.795338 = **69.27x** (cross-machine)
+| Comparacao | Calculo | Speedup medio run_colony |
+|---|---:|---:|
+| C vs Python | 2202.496101 / 488.688291 | **4.51x** |
+| CUDA vs Python | 2202.496101 / 4.996700 | **440.79x** |
+| CUDA vs C | 488.688291 / 4.996700 | **97.80x** |
 
 ---
 
@@ -401,8 +400,8 @@ Speedup medio CUDA/Python: 2157.259319 / 4.970554 = **434.02x**
 | Dataset | n | Atributos | Python medio (s) | C medio (s) | Speedup C/Python | CUDA medio (s) | Speedup CUDA/Python | Speedup CUDA/C |
 |---|---:|---:|-----------------:|------------:|-----------------:|---------------:|--------------------:|---------------:|
 | yeast | 1484 | 8 | 74.74 | 7.89 | **9.47x** | 0.312 | **239.71x** | **25.31x** |
-| vh_data15 | 3353 | 41 | 433.06 | 121.78 | **3.56x** | 5.406 | **80.11x** | **22.53x** |
-| optdigits | 5620 | 64 | 2202.50 | 593.15 | **3.71x** | 31.795 | **69.27x** | **18.65x** |
+| vh_data15 | 3353 | 41 | 433.06 | 98.21 | **4.41x** | 1.208 | **358.56x** | **81.31x** |
+| optdigits | 5620 | 64 | 2202.50 | 488.69 | **4.51x** | 4.997 | **440.79x** | **97.80x** |
 | covtype_sample | 5620 | 54 | 2155.19 | 518.50 | **4.16x** | 4.981 | **432.73x** | **104.11x** |
 | weatherAUS_sample | 5620 | 21 | 2157.26 | 518.25 | **4.16x** | 4.971 | **434.02x** | **104.26x** |
 

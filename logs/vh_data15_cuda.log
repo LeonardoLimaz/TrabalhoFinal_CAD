@@ -1,0 +1,177 @@
+Arquivo: dataset/vh_data15.csv
+Instancias: 3353 | Atributos: 41 | Classes: 2 | Alvo: Vaccine_Hesitant
+Parametros: feromonio inicial=1 | evaporacao=0.1 | Q=1
+Seeds: 0, 42, 123, 789, 1024
+Iniciando execucoes CUDA
+
+Seed 0
+Iteracao 100 concluida; posicoes indefinidas restantes: 10568753
+Iteracao 200 concluida; posicoes indefinidas restantes: 9899050
+Iteracao 300 concluida; posicoes indefinidas restantes: 9228535
+Iteracao 400 concluida; posicoes indefinidas restantes: 8557942
+Iteracao 500 concluida; posicoes indefinidas restantes: 7887504
+Iteracao 600 concluida; posicoes indefinidas restantes: 7216680
+Iteracao 700 concluida; posicoes indefinidas restantes: 6545774
+Iteracao 800 concluida; posicoes indefinidas restantes: 5875186
+Iteracao 900 concluida; posicoes indefinidas restantes: 5205031
+Iteracao 1000 concluida; posicoes indefinidas restantes: 4536137
+Iteracao 1100 concluida; posicoes indefinidas restantes: 3864382
+Iteracao 1200 concluida; posicoes indefinidas restantes: 3194354
+Iteracao 1300 concluida; posicoes indefinidas restantes: 2523787
+Iteracao 1400 concluida; posicoes indefinidas restantes: 1852257
+Iteracao 1500 concluida; posicoes indefinidas restantes: 1182172
+Iteracao 1600 concluida; posicoes indefinidas restantes: 511403
+Iteracao 1700 concluida; posicoes indefinidas restantes: 24123
+Iteracao 1771 concluida; posicoes indefinidas restantes: 0
+Instancias selecionadas: 1741
+Acuracia 1-NN da melhor solucao: 0.855652
+Tempo CUDA distancias: 0.002792 segundos
+Tempo ACO: 0.929815 segundos
+Tempo avaliacao 1-NN: 0.222413 segundos
+Tempo run_colony: 1.414063 segundos
+Tempo total seed: 1.414405 segundos
+CSV reduzido salvo em: dataset/vh_data15_reduzido_cuda_seed0.csv
+
+Seed 42
+Iteracao 100 concluida; posicoes indefinidas restantes: 10568438
+Iteracao 200 concluida; posicoes indefinidas restantes: 9898791
+Iteracao 300 concluida; posicoes indefinidas restantes: 9228114
+Iteracao 400 concluida; posicoes indefinidas restantes: 8557557
+Iteracao 500 concluida; posicoes indefinidas restantes: 7887307
+Iteracao 600 concluida; posicoes indefinidas restantes: 7216374
+Iteracao 700 concluida; posicoes indefinidas restantes: 6545659
+Iteracao 800 concluida; posicoes indefinidas restantes: 5875060
+Iteracao 900 concluida; posicoes indefinidas restantes: 5204979
+Iteracao 1000 concluida; posicoes indefinidas restantes: 4536095
+Iteracao 1100 concluida; posicoes indefinidas restantes: 3864387
+Iteracao 1200 concluida; posicoes indefinidas restantes: 3194175
+Iteracao 1300 concluida; posicoes indefinidas restantes: 2523563
+Iteracao 1400 concluida; posicoes indefinidas restantes: 1851915
+Iteracao 1500 concluida; posicoes indefinidas restantes: 1181941
+Iteracao 1600 concluida; posicoes indefinidas restantes: 511284
+Iteracao 1700 concluida; posicoes indefinidas restantes: 23918
+Iteracao 1771 concluida; posicoes indefinidas restantes: 0
+Instancias selecionadas: 1726
+Acuracia 1-NN da melhor solucao: 0.854160
+Tempo CUDA distancias: 0.002259 segundos
+Tempo ACO: 0.922620 segundos
+Tempo avaliacao 1-NN: 0.220740 segundos
+Tempo run_colony: 1.150464 segundos
+Tempo total seed: 1.150806 segundos
+CSV reduzido salvo em: dataset/vh_data15_reduzido_cuda_seed42.csv
+
+Seed 123
+Iteracao 100 concluida; posicoes indefinidas restantes: 10568596
+Iteracao 200 concluida; posicoes indefinidas restantes: 9899032
+Iteracao 300 concluida; posicoes indefinidas restantes: 9228502
+Iteracao 400 concluida; posicoes indefinidas restantes: 8557680
+Iteracao 500 concluida; posicoes indefinidas restantes: 7887529
+Iteracao 600 concluida; posicoes indefinidas restantes: 7216540
+Iteracao 700 concluida; posicoes indefinidas restantes: 6545804
+Iteracao 800 concluida; posicoes indefinidas restantes: 5875021
+Iteracao 900 concluida; posicoes indefinidas restantes: 5204918
+Iteracao 1000 concluida; posicoes indefinidas restantes: 4535779
+Iteracao 1100 concluida; posicoes indefinidas restantes: 3863943
+Iteracao 1200 concluida; posicoes indefinidas restantes: 3194039
+Iteracao 1300 concluida; posicoes indefinidas restantes: 2523081
+Iteracao 1400 concluida; posicoes indefinidas restantes: 1851505
+Iteracao 1500 concluida; posicoes indefinidas restantes: 1181406
+Iteracao 1600 concluida; posicoes indefinidas restantes: 510960
+Iteracao 1700 concluida; posicoes indefinidas restantes: 24014
+Iteracao 1771 concluida; posicoes indefinidas restantes: 0
+Instancias selecionadas: 1760
+Acuracia 1-NN da melhor solucao: 0.852371
+Tempo CUDA distancias: 0.002261 segundos
+Tempo ACO: 0.923316 segundos
+Tempo avaliacao 1-NN: 0.222047 segundos
+Tempo run_colony: 1.152455 segundos
+Tempo total seed: 1.152770 segundos
+CSV reduzido salvo em: dataset/vh_data15_reduzido_cuda_seed123.csv
+
+Seed 789
+Iteracao 100 concluida; posicoes indefinidas restantes: 10568734
+Iteracao 200 concluida; posicoes indefinidas restantes: 9898937
+Iteracao 300 concluida; posicoes indefinidas restantes: 9227851
+Iteracao 400 concluida; posicoes indefinidas restantes: 8557101
+Iteracao 500 concluida; posicoes indefinidas restantes: 7887192
+Iteracao 600 concluida; posicoes indefinidas restantes: 7216049
+Iteracao 700 concluida; posicoes indefinidas restantes: 6545173
+Iteracao 800 concluida; posicoes indefinidas restantes: 5874426
+Iteracao 900 concluida; posicoes indefinidas restantes: 5203814
+Iteracao 1000 concluida; posicoes indefinidas restantes: 4535299
+Iteracao 1100 concluida; posicoes indefinidas restantes: 3863449
+Iteracao 1200 concluida; posicoes indefinidas restantes: 3193122
+Iteracao 1300 concluida; posicoes indefinidas restantes: 2522475
+Iteracao 1400 concluida; posicoes indefinidas restantes: 1851312
+Iteracao 1500 concluida; posicoes indefinidas restantes: 1181320
+Iteracao 1600 concluida; posicoes indefinidas restantes: 510832
+Iteracao 1700 concluida; posicoes indefinidas restantes: 24338
+Iteracao 1779 concluida; posicoes indefinidas restantes: 0
+Instancias selecionadas: 1764
+Acuracia 1-NN da melhor solucao: 0.854459
+Tempo CUDA distancias: 0.002256 segundos
+Tempo ACO: 0.929196 segundos
+Tempo avaliacao 1-NN: 0.221511 segundos
+Tempo run_colony: 1.157823 segundos
+Tempo total seed: 1.158162 segundos
+CSV reduzido salvo em: dataset/vh_data15_reduzido_cuda_seed789.csv
+
+Seed 1024
+Iteracao 100 concluida; posicoes indefinidas restantes: 10569560
+Iteracao 200 concluida; posicoes indefinidas restantes: 9898760
+Iteracao 300 concluida; posicoes indefinidas restantes: 9228525
+Iteracao 400 concluida; posicoes indefinidas restantes: 8559067
+Iteracao 500 concluida; posicoes indefinidas restantes: 7888732
+Iteracao 600 concluida; posicoes indefinidas restantes: 7218293
+Iteracao 700 concluida; posicoes indefinidas restantes: 6548120
+Iteracao 800 concluida; posicoes indefinidas restantes: 5877435
+Iteracao 900 concluida; posicoes indefinidas restantes: 5207303
+Iteracao 1000 concluida; posicoes indefinidas restantes: 4537825
+Iteracao 1100 concluida; posicoes indefinidas restantes: 3866299
+Iteracao 1200 concluida; posicoes indefinidas restantes: 3196700
+Iteracao 1300 concluida; posicoes indefinidas restantes: 2527126
+Iteracao 1400 concluida; posicoes indefinidas restantes: 1855983
+Iteracao 1500 concluida; posicoes indefinidas restantes: 1184989
+Iteracao 1600 concluida; posicoes indefinidas restantes: 514854
+Iteracao 1700 concluida; posicoes indefinidas restantes: 23787
+Iteracao 1787 concluida; posicoes indefinidas restantes: 0
+Instancias selecionadas: 1711
+Acuracia 1-NN da melhor solucao: 0.852967
+Tempo CUDA distancias: 0.002258 segundos
+Tempo ACO: 0.935218 segundos
+Tempo avaliacao 1-NN: 0.221746 segundos
+Tempo run_colony: 1.164057 segundos
+Tempo total seed: 1.164396 segundos
+CSV reduzido salvo em: dataset/vh_data15_reduzido_cuda_seed1024.csv
+
+Resumo CUDA
+Execucoes: 5
+Tempo medio run_colony: 1.207772 segundos
+Desvio padrao run_colony: 0.115440 segundos
+Tempo medio total por seed: 1.208108 segundos
+Desvio padrao total por seed: 0.115444 segundos
+Instancias selecionadas media: 1740.40
+Tempo total do experimento: 6.074633 segundos
+	Command being timed: "./aco_cuda dataset/vh_data15.csv dataset/vh_data15_reduzido_cuda.csv --target Vaccine_Hesitant --seeds 0,42,123,789,1024"
+	User time (seconds): 5.80
+	System time (seconds): 0.27
+	Percent of CPU this job got: 98%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:06.14
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 104784
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 79
+	Minor (reclaiming a frame) page faults: 7847
+	Voluntary context switches: 273
+	Involuntary context switches: 45
+	Swaps: 0
+	File system inputs: 15048
+	File system outputs: 2544
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
