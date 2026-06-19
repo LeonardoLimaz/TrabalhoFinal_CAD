@@ -2,13 +2,13 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OrdinalEncoder, LabelEncoder
 from sklearn.pipeline import Pipeline
-from sklearn.metrics import roc_auc_score, roc_curve, accuracy_score
+from sklearn.metrics import roc_auc_score, roc_curve, accuracy_score, f1_score
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -153,18 +153,24 @@ for dataset_name, config in DATASETS.items():
         y_pred_proba = model.predict_proba(X_valid)
         accuracy     = accuracy_score(y_valid, y_pred)
 
+        # F1 ponderado — robusto a desbalanceamento de classes
+        f1 = f1_score(y_valid, y_pred, average="weighted", zero_division=0)
+
+        # Desvio padrão via 5-fold CV estratificado no dataset completo
+        cv      = StratifiedKFold(n_splits=5, shuffle=True, random_state=0)
+        cv_acc  = cross_val_score(build_model(X), X, y, cv=cv, scoring="accuracy")
+        acc_std = float(cv_acc.std())
+
         auc = None
         if not is_multiclass:
             auc = roc_auc_score(y_valid, y_pred_proba[:, 1])
             fpr, tpr, _ = roc_curve(y_valid, y_pred_proba[:, 1])
             binary_roc.setdefault(dataset_name, {})[version_name] = (fpr, tpr, auc)
 
-        
         if version_name == "original":
             n_original   = len(data)
             acc_original = accuracy
 
-       
         row = {
             "dataset":      dataset_name,
             "version":      version_name,
@@ -172,6 +178,8 @@ for dataset_name, config in DATASETS.items():
             "n_treino":     len(X_train),
             "n_teste":      len(X_valid),
             "accuracy":     round(accuracy, 4),
+            "accuracy_std": round(acc_std, 4),
+            "f1":           round(f1, 4),
             "auc":          round(auc, 4) if auc is not None else None,
             "delta":        round(accuracy - acc_original, 4) if acc_original is not None else None,
             "taxa_retencao": round(len(data) / n_original, 4) if n_original else None,
@@ -181,7 +189,7 @@ for dataset_name, config in DATASETS.items():
 
         auc_str = f"auc={auc:.3f}" if auc is not None else "auc=N/A"
         print(f"{dataset_name:12} | {version_name:8} | n={len(data):6} | "
-              f"acc={accuracy:.4f} | {auc_str}")
+              f"acc={accuracy:.4f} ± {acc_std:.4f} | f1={f1:.4f} | {auc_str}")
 
     
     pd.DataFrame(dataset_results).to_csv(

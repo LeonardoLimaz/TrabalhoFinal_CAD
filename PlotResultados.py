@@ -44,6 +44,8 @@ if not datasets_list:
 
 originals    = results_df[results_df["version"] == "original"].set_index("dataset")["accuracy"]
 all_versions = [v for v in VERSION_ORDER if v in results_df["version"].values]
+has_std = "accuracy_std" in results_df.columns
+has_f1  = "f1" in results_df.columns
 
 os.makedirs("resultados", exist_ok=True)
 
@@ -61,22 +63,29 @@ for i, version in enumerate(all_versions):
            .set_index("dataset").reindex(datasets_list))
     acc_vals = grp["accuracy"].values.astype(float)
 
+    std_vals = (grp["accuracy_std"].values.astype(float)
+                if has_std else np.zeros(len(datasets_list)))
+
     bars = ax.bar(
         x + (i - n_ver / 2 + 0.5) * width,
         acc_vals, width,
         color=VERSION_COLORS.get(version, "gray"),
         label=version, zorder=3,
         edgecolor="white", linewidth=0.4,
+        yerr=std_vals if has_std else None,
+        capsize=3, error_kw={"elinewidth": 1.1, "ecolor": "black", "alpha": 0.7},
     )
-    for rect, val in zip(bars, acc_vals):
+    for rect, val, std in zip(bars, acc_vals, std_vals):
         if np.isnan(val):
             continue
+        offset = (std if has_std else 0) + 0.008
+        label  = f"{val:.3f}±{std:.3f}" if has_std else f"{val:.3f}"
         ax.text(
             rect.get_x() + rect.get_width() / 2,
-            val + 0.005,
-            f"{val:.3f}",
+            val + offset,
+            label,
             ha="center", va="bottom",
-            fontsize=5.5, color="black", rotation=90,
+            fontsize=5, color="black", rotation=90,
         )
 
 ax.set_ylim(0, 1.12)
@@ -167,5 +176,50 @@ plt.tight_layout()
 plt.savefig("resultados/amostras_por_versao.png", dpi=150, bbox_inches="tight")
 plt.close()
 print("Salvo: resultados/amostras_por_versao.png")
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Figura 4 — F1-Score ponderado por versão (apenas se disponível no CSV)
+# ═══════════════════════════════════════════════════════════════════════════════
+if has_f1:
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    for i, version in enumerate(all_versions):
+        grp = (results_df[results_df["version"] == version]
+               .set_index("dataset").reindex(datasets_list))
+        f1_vals = grp["f1"].values.astype(float)
+
+        bars = ax.bar(
+            x + (i - n_ver / 2 + 0.5) * width,
+            f1_vals, width,
+            color=VERSION_COLORS.get(version, "gray"),
+            label=version, zorder=3,
+            edgecolor="white", linewidth=0.4,
+        )
+        for rect, val in zip(bars, f1_vals):
+            if np.isnan(val):
+                continue
+            ax.text(
+                rect.get_x() + rect.get_width() / 2,
+                val + 0.005,
+                f"{val:.3f}",
+                ha="center", va="bottom",
+                fontsize=5.5, color="black", rotation=90,
+            )
+
+    ax.set_ylim(0, 1.12)
+    ax.set_title("F1-Score Ponderado por Versão — Random Forest (seed 42)", fontsize=12)
+    ax.set_ylabel("F1-Score (weighted)")
+    ax.set_xlabel("Dataset")
+    ax.set_xticks(x)
+    ax.set_xticklabels(datasets_list, rotation=20, ha="right")
+    ax.legend(title="Versão", fontsize=8.5)
+    ax.grid(axis="y", linestyle="--", alpha=0.4, zorder=1)
+    ax.yaxis.set_major_formatter(mticker.FormatStrFormatter("%.2f"))
+    plt.tight_layout()
+    plt.savefig("resultados/f1_por_versao.png", dpi=150, bbox_inches="tight")
+    plt.close()
+    print("Salvo: resultados/f1_por_versao.png")
+else:
+    print("[INFO] Coluna 'f1' não encontrada no CSV — execute RandomForest.py para gerar.")
 
 print("\nPlots concluídos. Arquivos salvos em 'resultados/'.")
