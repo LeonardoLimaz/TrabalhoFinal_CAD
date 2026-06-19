@@ -6,26 +6,71 @@ Parametros: feromonio inicial=1 | evaporacao=0.1 | Q=1
 ---
 
 ## Dataset: yeast.csv
-Instancias: 1484 | Atributos: 8 | Classes: 10
+Instancias: 1484 | Atributos: 8 | Classes: 10 | Alvo: name
+Execucoes feitas em um RTX 4060 TI e processador Ryzen 5700X3D para Python, C e CUDA.
 
-### Versao CUDA
-| Seed | Instancias Selecionadas | Acuracia 1-NN | Tempo run_colony (s) |
-|-----:|------------------------:|:-------------:|---------------------:|
-| 0 | 800 | 0.787062 | 0.386763 |
-| 42 | 782 | 0.785040 | 0.261474 |
-| 123 | 800 | 0.784367 | 0.262546 |
-| 789 | 793 | 0.785040 | 0.263765 |
-| 1024 | 757 | 0.784367 | 0.255017 |
+### Versao Python (NumPy vetorizado)
+| Seed | Instancias Selecionadas | Acuracia 1-NN | Tempo ACO (s) | Tempo 1-NN (s) | Tempo run_colony (s) | Tempo total seed (s) |
+|-----:|------------------------:|:-------------:|--------------:|---------------:|---------------------:|---------------------:|
+| 0 | 756 | 0.783019 | 68.544987 | 7.054984 | 75.624469 | 75.633594 |
+| 42 | 781 | 0.783019 | 68.429288 | 6.447527 | 74.899222 | 74.903080 |
+| 123 | 775 | 0.780997 | 67.686294 | 7.319547 | 75.030835 | 75.034568 |
+| 789 | 805 | 0.782345 | 64.602495 | 6.659379 | 71.283990 | 71.287797 |
+| 1024 | 810 | 0.781671 | 70.103430 | 6.734751 | 76.859399 | 76.863126 |
 
 | Metrica | Valor |
 |---|---:|
-| Tempo medio run_colony | 0.285913 s |
-| Desvio padrao run_colony | 0.056478 s |
+| Tempo medio run_colony | 74.739583 s |
+| Desvio padrao run_colony | 2.081350 s |
+| Tempo medio total por seed | 74.744433 s |
+| Desvio padrao total por seed | 2.081895 s |
+| Media instancias selecionadas | 785.40 |
+| Tempo total do experimento | 373.741689 s |
+
+### Versao C Sequencial
+| Seed | Instancias Selecionadas | Acuracia 1-NN | Tempo ACO (s) | Tempo 1-NN (s) | Tempo run_colony (s) | Tempo total seed (s) |
+|-----:|------------------------:|:-------------:|--------------:|---------------:|---------------------:|---------------------:|
+| 0 | 790 | 0.785714 | 5.388000 | 2.591000 | 7.997000 | 7.999000 |
+| 42 | 775 | 0.787062 | 4.656000 | 2.556000 | 7.227000 | 7.229000 |
+| 123 | 779 | 0.784367 | 4.631000 | 2.524000 | 7.171000 | 7.172000 |
+| 789 | 783 | 0.783693 | 6.853000 | 3.079000 | 9.948000 | 9.949000 |
+| 1024 | 785 | 0.788410 | 4.532000 | 2.565000 | 7.113000 | 7.114000 |
+
+| Metrica | Valor |
+|---|---:|
+| Tempo medio run_colony | 7.891200 s |
+| Desvio padrao run_colony | 1.204893 s |
+| Tempo medio total por seed | 7.892600 s |
+| Desvio padrao total por seed | 1.204777 s |
+| Media instancias selecionadas | 782.40 |
+| Tempo total do experimento | 39.466000 s |
+
+### Versao CUDA
+| Seed | Instancias Selecionadas | Acuracia 1-NN | Tempo distancias (s) | Tempo ACO (s) | Tempo 1-NN (s) | Tempo run_colony (s) | Tempo total seed (s) |
+|-----:|------------------------:|:-------------:|---------------------:|--------------:|---------------:|---------------------:|---------------------:|
+| 0 | 800 | 0.787062 | 0.000800 | 0.226516 | 0.052886 | 0.407305 | 0.409222 |
+| 42 | 782 | 0.785040 | 0.000335 | 0.237575 | 0.053883 | 0.295359 | 0.296008 |
+| 123 | 800 | 0.784367 | 0.000338 | 0.225899 | 0.058617 | 0.288768 | 0.289518 |
+| 789 | 793 | 0.785040 | 0.000332 | 0.224775 | 0.052904 | 0.281484 | 0.282168 |
+| 1024 | 757 | 0.784367 | 0.000329 | 0.224671 | 0.057544 | 0.286075 | 0.286724 |
+
+| Metrica | Valor |
+|---|---:|
+| Tempo medio run_colony | 0.311798 s |
+| Desvio padrao run_colony | 0.053626 s |
+| Tempo medio total por seed | 0.312728 s |
+| Desvio padrao total por seed | 0.054174 s |
 | Media instancias selecionadas | 786.40 |
-| Tempo total do experimento | 1.439253 s |
+| Tempo total do experimento | 1.570741 s |
+
+### Speedup no yeast.csv (mesma maquina)
+| Comparacao | Calculo | Speedup medio run_colony |
+|---|---:|---:|
+| C vs Python | 74.739583 / 7.891200 | **9.47x** |
+| CUDA vs Python | 74.739583 / 0.311798 | **239.71x** |
+| CUDA vs C | 7.891200 / 0.311798 | **25.31x** |
 
 ---
-
 ## Dataset: vh_data15.csv
 Instancias: 3353 | Atributos: 41 | Classes: 2
 
@@ -209,12 +254,12 @@ Speedup medio run_colony: 518.248448 / 4.970554 = **104.26x**
 ## Comparativo geral de speedup (todos os datasets)
 | Dataset | Instancias | Atributos | Speedup medio run_colony |
 |---|---:|---:|---:|
+| yeast | 1484 | 8 | 25.31x |
 | vh_data15 | 3353 | 41 | 22.53x |
 | optdigits | 5620 | 64 | 18.65x |
 | covtype_sample | 5620 | 54 | 104.11x |
 | weatherAUS_sample | 5620 | 21 | 104.26x |
-
-**Importante:** vh_data15 e optdigits foram originalmente medidos em uma RTX 4060 Ti (ver README); covtype_sample e weatherAUS_sample foram medidos nesta maquina, com uma RTX 4090. O salto no speedup (~18-22x para ~104x) reflete majoritariamente essa diferenca de GPU, e nao um efeito do dataset em si — o tempo C permanece na mesma ordem de grandeza (~518s) que o de optdigits (~593s) para o mesmo n=5620, mas o tempo CUDA cai de ~32s para ~5s por ser uma GPU mais potente. Para uma comparacao justa entre datasets, os tempos absolutos de CUDA nao devem ser comparados entre maquinas diferentes.
+**Importante:** yeast, covtype_sample e weatherAUS_sample foram medidos nesta maquina local. vh_data15 e optdigits foram originalmente medidos em outra maquina (ver README). Por isso, comparacoes de tempo CUDA entre esses grupos de datasets devem ser tratadas como indicativas.
 
 ---
 
@@ -222,38 +267,12 @@ Speedup medio run_colony: 518.248448 / 4.970554 = **104.26x**
 
 Implementacao Python reescrita com numpy vetorizado (sem lacos Python aninhados O(n^2)): escolha de caminho por argsort/flatnonzero, evaporacao por multiplicacao in-place, deposito por fancy-index, avaliacao 1-NN por argmin matricial. Executada nesta maquina (RTX 4090, mesma maquina dos experimentos C/CUDA de covtype e weatherAUS).
 
-### Dataset: yeast.csv — Versao Python
-| Seed | Instancias Selecionadas | Acuracia 1-NN | Tempo ACO (s) | Tempo 1-NN (s) | Tempo run_colony (s) |
-|-----:|------------------------:|:-------------:|--------------:|---------------:|---------------------:|
-| 0 | 791 | 0.785040 | 27.102436 | 4.358665 | 31.485772 |
-| 42 | 773 | 0.785714 | 27.247917 | 4.230841 | 31.511593 |
-| 123 | 785 | 0.781671 | 27.399593 | 4.219842 | 31.661415 |
-| 789 | 757 | 0.783693 | 27.521716 | 4.220509 | 31.775444 |
-| 1024 | 789 | 0.786388 | 27.684748 | 4.294446 | 32.012541 |
-
-| Metrica | Valor |
-|---|---:|
-| Tempo medio run_colony | 31.689353 s |
-| Desvio padrao run_colony | 0.215457 s |
-| Media instancias selecionadas | 779.00 |
-| Tempo total do experimento | 158.461410 s |
-
-### Speedup CUDA vs Python (yeast)
-> Atencao: Python medido nesta maquina (RTX 4090); CUDA medido originalmente em RTX 4060 Ti. Comparacao indicativa — maquinas diferentes.
-
-| Seed | Tempo Python (s) | Tempo CUDA (s) | Speedup CUDA/Python |
-|-----:|-----------------:|---------------:|--------------------:|
-| 0 | 31.486 | 0.387 | 81.37x |
-| 42 | 31.512 | 0.261 | 120.73x |
-| 123 | 31.661 | 0.263 | 120.46x |
-| 789 | 31.775 | 0.264 | 120.36x |
-| 1024 | 32.013 | 0.255 | 125.54x |
-
-Speedup medio CUDA/Python: 31.689353 / 0.285913 = **110.83x** (cross-machine)
+### Dataset: yeast.csv - Resultado consolidado nesta maquina
+Os resultados atualizados do `yeast.csv` para Python, C e CUDA foram consolidados na primeira secao deste arquivo, permitindo comparar as tres versoes executadas no mesmo PC.
 
 ---
 
-### Dataset: vh_data15.csv — Versao Python
+### Dataset: vh_data15.csv - Versao Python
 | Seed | Instancias Selecionadas | Acuracia 1-NN | Tempo ACO (s) | Tempo 1-NN (s) | Tempo run_colony (s) |
 |-----:|------------------------:|:-------------:|--------------:|---------------:|---------------------:|
 | 0 | 1797 | 0.857143 | 264.269615 | 163.767545 | 428.149533 |
@@ -381,12 +400,11 @@ Speedup medio CUDA/Python: 2157.259319 / 4.970554 = **434.02x**
 
 | Dataset | n | Atributos | Python medio (s) | C medio (s) | Speedup C/Python | CUDA medio (s) | Speedup CUDA/Python | Speedup CUDA/C |
 |---|---:|---:|-----------------:|------------:|-----------------:|---------------:|--------------------:|---------------:|
-| yeast | 1484 | 8 | 31.69 | — | — | 0.286 (*) | 110.83x (*) | 22.53x (*) |
+| yeast | 1484 | 8 | 74.74 | 7.89 | **9.47x** | 0.312 | **239.71x** | 25.31x |
 | vh_data15 | 3353 | 41 | 433.06 | 121.78 (*) | 3.56x (*) | 5.406 (*) | 80.11x (*) | 22.53x (*) |
 | optdigits | 5620 | 64 | 2202.50 | 593.15 (*) | 3.71x (*) | 31.795 (*) | 69.27x (*) | 18.65x (*) |
 | covtype_sample | 5620 | 54 | 2155.19 | 518.50 | **4.16x** | 4.981 | **432.73x** | 104.11x |
 | weatherAUS_sample | 5620 | 21 | 2157.26 | 518.25 | **4.16x** | 4.971 | **434.02x** | 104.26x |
-
 (*) = comparacao entre maquinas diferentes (C/CUDA em RTX 4060 Ti; Python nesta maquina com RTX 4090). Valores indicativos.
 
-**Conclusao:** Para os datasets medidos na mesma maquina (covtype e weatherAUS, n=5620), a versao C sequencial e ~4.16x mais rapida que o Python vetorizado com NumPy, e a versao CUDA e ~433x mais rapida que Python. O Python vetorizado, apesar de significativamente mais rapido que uma implementacao Python pura com lacos, continua limitado pelo overhead do interpretador e pela ausencia de paralelismo — o GIL impede threads, e o numpy opera sequencialmente no loop externo por formiga. A versao C explora SIMD e cache de forma mais eficiente para o padrao de acesso ao array, e a versao CUDA paraleliza o loop das formigas inteiramente na GPU.
+**Conclusao:** No teste atualizado do `yeast.csv` nesta maquina, a versao C sequencial reduziu o tempo medio de `run_colony` de 74.739583 s (Python) para 7.891200 s, gerando speedup de **9.47x**. A versao CUDA reduziu para 0.311798 s, com speedup de **239.71x** sobre Python e **25.31x** sobre C. Nos datasets maiores medidos na mesma maquina (covtype e weatherAUS, n=5620), a versao C ficou em torno de **4.16x** mais rapida que Python, enquanto CUDA ficou acima de **432x** sobre Python.
