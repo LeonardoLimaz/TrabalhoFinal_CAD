@@ -400,11 +400,10 @@ Speedup medio CUDA/Python: 2157.259319 / 4.970554 = **434.02x**
 
 | Dataset | n | Atributos | Python medio (s) | C medio (s) | Speedup C/Python | CUDA medio (s) | Speedup CUDA/Python | Speedup CUDA/C |
 |---|---:|---:|-----------------:|------------:|-----------------:|---------------:|--------------------:|---------------:|
-| yeast | 1484 | 8 | 74.74 | 7.89 | **9.47x** | 0.312 | **239.71x** | 25.31x |
-| vh_data15 | 3353 | 41 | 433.06 | 121.78 (*) | 3.56x (*) | 5.406 (*) | 80.11x (*) | 22.53x (*) |
-| optdigits | 5620 | 64 | 2202.50 | 593.15 (*) | 3.71x (*) | 31.795 (*) | 69.27x (*) | 18.65x (*) |
-| covtype_sample | 5620 | 54 | 2155.19 | 518.50 | **4.16x** | 4.981 | **432.73x** | 104.11x |
-| weatherAUS_sample | 5620 | 21 | 2157.26 | 518.25 | **4.16x** | 4.971 | **434.02x** | 104.26x |
-(*) = comparacao entre maquinas diferentes (C/CUDA em RTX 4060 Ti; Python nesta maquina com RTX 4090). Valores indicativos.
+| yeast | 1484 | 8 | 74.74 | 7.89 | **9.47x** | 0.312 | **239.71x** | **25.31x** |
+| vh_data15 | 3353 | 41 | 433.06 | 121.78 | **3.56x** | 5.406 | **80.11x** | **22.53x** |
+| optdigits | 5620 | 64 | 2202.50 | 593.15 | **3.71x** | 31.795 | **69.27x** | **18.65x** |
+| covtype_sample | 5620 | 54 | 2155.19 | 518.50 | **4.16x** | 4.981 | **432.73x** | **104.11x** |
+| weatherAUS_sample | 5620 | 21 | 2157.26 | 518.25 | **4.16x** | 4.971 | **434.02x** | **104.26x** |
 
 **Conclusao:** No teste atualizado do `yeast.csv` nesta maquina, a versao C sequencial reduziu o tempo medio de `run_colony` de 74.739583 s (Python) para 7.891200 s, gerando speedup de **9.47x**. A versao CUDA reduziu para 0.311798 s, com speedup de **239.71x** sobre Python e **25.31x** sobre C. Nos datasets maiores medidos na mesma maquina (covtype e weatherAUS, n=5620), a versao C ficou em torno de **4.16x** mais rapida que Python, enquanto CUDA ficou acima de **432x** sobre Python.
